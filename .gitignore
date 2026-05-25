@@ -1,0 +1,41 @@
+# Virtual Environment
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.example
+
+# Data files
+*.csv
+data/
+
+# ML artifacts
+*.pkl
+*.joblib
+mlruns/
+
+# VS Code
+.vscode/
+
+# Flutter
+flutterapp/.dart_tool/
+flutterapp/build/
+flutterapp/.flutter-plugins
+
+# OS
+.DS_Store
+Thumbs.db
