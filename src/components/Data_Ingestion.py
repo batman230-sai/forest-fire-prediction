@@ -20,7 +20,7 @@ if __name__ == "__main__":
     # 1. Initialize the ingestion class
     obj = DataIngestion()
     
-    # 2. Call the action method (once you write it)
+    # 2. Call the action method 
     # train_data, test_data = obj.initiate_data_ingestion()
     
     print("Data Ingestion setup is executing...")
