@@ -22,6 +22,6 @@ Following an extensive 5-fold `GridSearchCV` testing 108 combinations, the **Ran
 ## Pipeline & Deployment
 With the experimentation phase successfully completed, the final model and standard scaler have been exported as `fwi_rf_model.joblib` and `fwi_scaler.joblib`, respectively. The project architecture now moves to the Pipeline Building phase within the `src/` directory to integrate the models into the API backend.
 ## Quick Start
-1. Clone the repo: `git clone <url>`
+1. Clone the repo: `git clone https://github.com/batman230-sai/forest-fire-prediction.git`
 2. Install dependencies: `pip install -r requirements.txt`
 3. Run the training pipeline: `python -m src.components.Data_Ingestion`
