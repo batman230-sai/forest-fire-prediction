@@ -51,3 +51,4 @@ flutterapp/.flutter-plugins-dependencies  # Added: Standard Flutter auto-generat
 .idea/              # Added: In case a teammate uses PyCharm/IntelliJ
 .DS_Store
 Thumbs.db
+*.log
