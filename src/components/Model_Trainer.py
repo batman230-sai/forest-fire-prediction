@@ -4,11 +4,10 @@ from dataclasses import dataclass
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
-from sklearn.model_selection import GridSearchCV
 
 from src.logger import logging
 from src.exception import CustomException
-from src.utils import save_object
+from src.utils import save_object, read_params # Imported read_params here
 
 @dataclass
 class ModelTrainerConfig:
@@ -28,15 +27,27 @@ class ModelTrainer:
                 test_array[:, -1]
             )
 
+            # Read parameters dynamically during training
+            logging.info("Fetching parameters from params.yaml")
+            params = read_params()
+            rf_params = params["model_trainer"]
+
+            # Initialize models, passing the YAML params to Random Forest
             models = {
                 "Linear Regression": LinearRegression(),
                 "Ridge Regression": Ridge(alpha=1.0),
                 "Lasso Regression": Lasso(alpha=0.1),
-                "Random Forest": RandomForestRegressor(random_state=42)
+                "Random Forest": RandomForestRegressor(
+                    n_estimators=rf_params["n_estimators"],
+                    max_depth=rf_params["max_depth"],
+                    min_samples_split=rf_params["min_samples_split"],
+                    random_state=42
+                )
             }
 
             model_report = {}
             for name, model in models.items():
+                logging.info(f"Training {name}...")
                 model.fit(X_train, y_train)
                 y_pred = model.predict(X_test)
                 model_report[name] = r2_score(y_test, y_pred)
@@ -47,19 +58,6 @@ class ModelTrainer:
             best_model = models[best_model_name]
 
             logging.info(f"Best Base Model: {best_model_name} (R2: {best_model_score:.4f})")
-
-            # Apply GridSearch if the winner is Random Forest
-            if best_model_name == "Random Forest":
-                logging.info("Executing GridSearchCV for Random Forest...")
-                param_grid = {
-                    'n_estimators': [50, 100],
-                    'max_depth': [10, 20],
-                    'min_samples_split': [2, 5],
-                    'min_samples_leaf': [1, 2]
-                }
-                gs = GridSearchCV(RandomForestRegressor(random_state=42), param_grid, cv=3, n_jobs=-1)
-                gs.fit(X_train, y_train)
-                best_model = gs.best_estimator_
 
             # Save the winning model
             save_object(file_path=self.model_trainer_config.trained_model_file_path, obj=best_model)
