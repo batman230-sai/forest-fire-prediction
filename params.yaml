@@ -1,0 +1,6 @@
+# params.yaml
+model_trainer:
+  # Example parameters for a Random Forest model
+  n_estimators: 100
+  max_depth: 10
+  min_samples_split: 2
