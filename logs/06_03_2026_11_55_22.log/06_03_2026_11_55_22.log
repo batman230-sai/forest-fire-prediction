@@ -1,0 +1,15 @@
+[ 2026-06-03 11:55:25,026 ] 23 root - INFO - Starting Data Ingestion Method
+[ 2026-06-03 11:55:25,074 ] 27 root - INFO - Read the dataset successfully
+[ 2026-06-03 11:55:25,088 ] 32 root - INFO - Initiating Train-Test Split
+[ 2026-06-03 11:55:25,117 ] 38 root - INFO - Data Ingestion completed successfully
+[ 2026-06-03 11:55:25,131 ] 56 root - INFO - Applying custom pandas cleaning logic
+[ 2026-06-03 11:55:25,172 ] 60 root - INFO - Obtaining preprocessing object
+[ 2026-06-03 11:55:25,174 ] 70 root - INFO - Applying StandardScaler to numerical features
+[ 2026-06-03 11:55:25,203 ] 22 root - INFO - Splitting transformed data into X and y
+[ 2026-06-03 11:55:25,205 ] 31 root - INFO - Fetching parameters from params.yaml
+[ 2026-06-03 11:55:25,209 ] 50 root - INFO - Training Linear Regression...
+[ 2026-06-03 11:55:25,225 ] 50 root - INFO - Training Ridge Regression...
+[ 2026-06-03 11:55:25,232 ] 50 root - INFO - Training Lasso Regression...
+[ 2026-06-03 11:55:25,240 ] 50 root - INFO - Training Random Forest...
+[ 2026-06-03 11:55:25,745 ] 60 root - INFO - Best Base Model: Linear Regression (R2: 0.9747)
+[ 2026-06-03 11:55:25,748 ] 64 root - INFO - Trained model exported successfully.
