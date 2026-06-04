@@ -29,13 +29,16 @@ stages:
       size: 3573
     - path: src/components/Model_Trainer.py
       hash: md5
-      md5: 77ee23194a8a705ce1815afcbe079fd3
-      size: 2774
+      md5: 8d1692154af258386c1fd0037395b759
+      size: 3298
     params:
       params.yaml:
-        model_trainer.max_depth: 10
-        model_trainer.min_samples_split: 2
-        model_trainer.n_estimators: 100
+        model_trainer.Lasso_Regression.alpha: 0.1
+        model_trainer.Random_Forest.max_depth: 10
+        model_trainer.Random_Forest.min_samples_split: 2
+        model_trainer.Random_Forest.n_estimators: 100
+        model_trainer.Random_Forest.random_state: 42
+        model_trainer.Ridge_Regression.alpha: 1.0
     outs:
     - path: artifacts/model.pkl
       hash: md5

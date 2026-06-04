@@ -1,13 +1,14 @@
 import os
 import sys
+import numpy as np
 from dataclasses import dataclass
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
 from src.logger import logging
 from src.exception import CustomException
-from src.utils import save_object, read_params # Imported read_params here
+from src.utils import save_object, read_params
 
 @dataclass
 class ModelTrainerConfig:
@@ -30,29 +31,35 @@ class ModelTrainer:
             # Read parameters dynamically during training
             logging.info("Fetching parameters from params.yaml")
             params = read_params()
-            rf_params = params["model_trainer"]
+            model_params = params["model_trainer"]
 
-            # Initialize models, passing the YAML params to Random Forest
+            # Initialize models, passing the YAML params dynamically using kwargs unpacking
             models = {
-                "Linear Regression": LinearRegression(),
-                "Ridge Regression": Ridge(alpha=1.0),
-                "Lasso Regression": Lasso(alpha=0.1),
-                "Random Forest": RandomForestRegressor(
-                    n_estimators=rf_params["n_estimators"],
-                    max_depth=rf_params["max_depth"],
-                    min_samples_split=rf_params["min_samples_split"],
-                    random_state=42
-                )
+                "Linear Regression": LinearRegression(**model_params.get("Linear_Regression", {})),
+                "Ridge Regression": Ridge(**model_params.get("Ridge_Regression", {})),
+                "Lasso Regression": Lasso(**model_params.get("Lasso_Regression", {})),
+                "Random Forest": RandomForestRegressor(**model_params.get("Random_Forest", {}))
             }
 
             model_report = {}
+            
             for name, model in models.items():
                 logging.info(f"Training {name}...")
                 model.fit(X_train, y_train)
                 y_pred = model.predict(X_test)
-                model_report[name] = r2_score(y_test, y_pred)
+                
+                # Calculate all metrics (as seen in your notebook)
+                mae = mean_absolute_error(y_test, y_pred)
+                mse = mean_squared_error(y_test, y_pred)
+                rmse = np.sqrt(mse)
+                r2 = r2_score(y_test, y_pred)
+                
+                logging.info(f"{name} Metrics - MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f}, R2: {r2:.4f}")
+                
+                # Store R2 score to determine the best model
+                model_report[name] = r2
             
-            # Identify the best performing model
+            # Identify the best performing model based on R2 score
             best_model_name = max(model_report, key=model_report.get)
             best_model_score = model_report[best_model_name]
             best_model = models[best_model_name]
@@ -63,6 +70,7 @@ class ModelTrainer:
             save_object(file_path=self.model_trainer_config.trained_model_file_path, obj=best_model)
             logging.info("Trained model exported successfully.")
 
+            # Return final R2 score of the best model
             final_predictions = best_model.predict(X_test)
             return r2_score(y_test, final_predictions)
 

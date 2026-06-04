@@ -1,6 +1,14 @@
-# params.yaml
 model_trainer:
-  # Example parameters for a Random Forest model
-  n_estimators: 100
-  max_depth: 10
-  min_samples_split: 2
+  Linear_Regression: {}
+  
+  Ridge_Regression:
+    alpha: 1.0
+    
+  Lasso_Regression:
+    alpha: 0.1
+    
+  Random_Forest:
+    n_estimators: 100
+    max_depth: 10
+    min_samples_split: 2
+    random_state: 42
