@@ -2,9 +2,19 @@ import os
 import sys
 import numpy as np
 from dataclasses import dataclass
+
+# Import all algorithms
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRegressor
+
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+
+# MLflow tracking
+import mlflow
+import mlflow.sklearn
+from urllib.parse import urlparse
 
 from src.logger import logging
 from src.exception import CustomException
@@ -28,36 +38,63 @@ class ModelTrainer:
                 test_array[:, -1]
             )
 
-            # Read parameters dynamically during training
-            logging.info("Fetching parameters from params.yaml")
             params = read_params()
             model_params = params["model_trainer"]
 
-            # Initialize models, passing the YAML params dynamically using kwargs unpacking
+            # Initialize all 6 models dynamically
             models = {
                 "Linear Regression": LinearRegression(**model_params.get("Linear_Regression", {})),
                 "Ridge Regression": Ridge(**model_params.get("Ridge_Regression", {})),
                 "Lasso Regression": Lasso(**model_params.get("Lasso_Regression", {})),
-                "Random Forest": RandomForestRegressor(**model_params.get("Random_Forest", {}))
+                "SVR": SVR(**model_params.get("SVR", {})),
+                "Random Forest": RandomForestRegressor(**model_params.get("Random_Forest", {})),
+                "XGBoost": XGBRegressor(**model_params.get("XGBoost", {}))
             }
 
             model_report = {}
-            
+
+            # --- MLFLOW SETUP ---
+            # Set the tracking URI to your local sqlite database
+            mlflow.set_tracking_uri("sqlite:///mlflow.db")
+            # Name your experiment
+            mlflow.set_experiment("Forest_Fire_Regression_Experiments")
+
             for name, model in models.items():
                 logging.info(f"Training {name}...")
-                model.fit(X_train, y_train)
-                y_pred = model.predict(X_test)
                 
-                # Calculate all metrics (as seen in your notebook)
-                mae = mean_absolute_error(y_test, y_pred)
-                mse = mean_squared_error(y_test, y_pred)
-                rmse = np.sqrt(mse)
-                r2 = r2_score(y_test, y_pred)
-                
-                logging.info(f"{name} Metrics - MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f}, R2: {r2:.4f}")
-                
-                # Store R2 score to determine the best model
-                model_report[name] = r2
+                # Start an MLflow run for each model
+                with mlflow.start_run(run_name=name):
+                    
+                    # 1. Train the model
+                    model.fit(X_train, y_train)
+                    y_pred = model.predict(X_test)
+                    
+                    # 2. Calculate Evaluation Metrics
+                    mae = mean_absolute_error(y_test, y_pred)
+                    mse = mean_squared_error(y_test, y_pred)
+                    rmse = np.sqrt(mse)
+                    r2 = r2_score(y_test, y_pred)
+                    
+                    # 3. Log Parameters and Metrics to MLflow
+                    # Fetch the specific parameters for this model from the yaml dict
+                    current_model_params = model_params.get(name.replace(" ", "_"), {})
+                    if current_model_params:
+                        mlflow.log_params(current_model_params)
+                    
+                    mlflow.log_metrics({
+                        "MAE": mae,
+                        "MSE": mse,
+                        "RMSE": rmse,
+                        "R2_Score": r2
+                    })
+                    
+                    # 4. Log the model artifact to MLflow
+                    mlflow.sklearn.log_model(model, "model")
+                    
+                    logging.info(f"{name} logged to MLflow - R2: {r2:.4f}")
+                    
+                    # Store R2 score to determine the overall best model to save locally
+                    model_report[name] = r2
             
             # Identify the best performing model based on R2 score
             best_model_name = max(model_report, key=model_report.get)
@@ -66,13 +103,11 @@ class ModelTrainer:
 
             logging.info(f"Best Base Model: {best_model_name} (R2: {best_model_score:.4f})")
 
-            # Save the winning model
+            # Save the winning model locally for your pipeline
             save_object(file_path=self.model_trainer_config.trained_model_file_path, obj=best_model)
-            logging.info("Trained model exported successfully.")
+            logging.info("Best trained model exported successfully to artifacts.")
 
-            # Return final R2 score of the best model
-            final_predictions = best_model.predict(X_test)
-            return r2_score(y_test, final_predictions)
+            return best_model_score
 
         except Exception as e:
             raise CustomException(e, sys)
