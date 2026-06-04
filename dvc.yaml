@@ -6,7 +6,6 @@ stages:
       - src/components/Data_Transformation.py
       - src/components/Model_Trainer.py
     params:
-      # Track the specific parameters for each model
       - model_trainer.Ridge_Regression.alpha
       - model_trainer.Lasso_Regression.alpha
       - model_trainer.Random_Forest.n_estimators
