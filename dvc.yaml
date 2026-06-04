@@ -6,12 +6,22 @@ stages:
       - src/components/Data_Transformation.py
       - src/components/Model_Trainer.py
     params:
+      # Track existing model parameters
       - model_trainer.Ridge_Regression.alpha
       - model_trainer.Lasso_Regression.alpha
       - model_trainer.Random_Forest.n_estimators
       - model_trainer.Random_Forest.max_depth
       - model_trainer.Random_Forest.min_samples_split
       - model_trainer.Random_Forest.random_state
+      
+      # Track new SVR parameters
+      - model_trainer.SVR.kernel
+      - model_trainer.SVR.C
+      
+      # Track new XGBoost parameters
+      - model_trainer.XGBoost.learning_rate
+      - model_trainer.XGBoost.n_estimators
+      - model_trainer.XGBoost.max_depth
     outs:
       - artifacts/train.csv
       - artifacts/test.csv
