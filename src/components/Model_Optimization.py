@@ -51,7 +51,9 @@ class ModelOptimizer:
             )
 
             # --- MLFLOW SETUP ---
-            mlflow.set_tracking_uri("sqlite:///mlflow.db")
+            import os
+            os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/batman230-sai/forest-fire-prediction.mlflow"
+            mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
             mlflow.set_experiment("Forest_Fire_Regression_Optimization")
 
             with mlflow.start_run(run_name="Ridge_Tuned"):
