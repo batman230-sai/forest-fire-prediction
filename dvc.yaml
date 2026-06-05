@@ -5,6 +5,7 @@ stages:
       - src/components/Data_Ingestion.py
       - src/components/Data_Transformation.py
       - src/components/Model_Trainer.py
+      - src/components/Model_Optimization.py
     params:
       # Track existing model parameters
       - model_trainer.Ridge_Regression.alpha
@@ -22,8 +23,13 @@ stages:
       - model_trainer.XGBoost.learning_rate
       - model_trainer.XGBoost.n_estimators
       - model_trainer.XGBoost.max_depth
+
+      # Track hyperparameter tuning parameters
+      - model_optimization.Ridge.alpha
+      - model_optimization.Ridge.solver
     outs:
       - artifacts/train.csv
       - artifacts/test.csv
       - artifacts/preprocessor.pkl
       - artifacts/model.pkl
+      - artifacts/tuned_model.pkl

@@ -1,0 +1,28 @@
+[ 2026-06-05 10:56:14,025 ] 24 root - INFO - Starting Data Ingestion Method
+[ 2026-06-05 10:56:14,044 ] 28 root - INFO - Read the dataset successfully
+[ 2026-06-05 10:56:14,053 ] 33 root - INFO - Initiating Train-Test Split
+[ 2026-06-05 10:56:14,074 ] 39 root - INFO - Data Ingestion completed successfully
+[ 2026-06-05 10:56:14,159 ] 56 root - INFO - Applying custom pandas cleaning logic
+[ 2026-06-05 10:56:14,201 ] 60 root - INFO - Obtaining preprocessing object
+[ 2026-06-05 10:56:14,205 ] 70 root - INFO - Applying StandardScaler to numerical features
+[ 2026-06-05 10:56:14,238 ] 33 root - INFO - Splitting transformed data into X and y
+[ 2026-06-05 10:56:18,808 ] 63 root - INFO - Training Linear Regression...
+[ 2026-06-05 10:56:56,216 ] 94 root - INFO - Linear Regression logged to MLflow - R2: 0.9747
+[ 2026-06-05 10:56:56,253 ] 63 root - INFO - Training Ridge Regression...
+[ 2026-06-05 10:57:06,346 ] 94 root - INFO - Ridge Regression logged to MLflow - R2: 0.9746
+[ 2026-06-05 10:57:06,370 ] 63 root - INFO - Training Lasso Regression...
+[ 2026-06-05 10:57:17,287 ] 94 root - INFO - Lasso Regression logged to MLflow - R2: 0.9741
+[ 2026-06-05 10:57:17,302 ] 63 root - INFO - Training SVR...
+[ 2026-06-05 10:57:27,769 ] 94 root - INFO - SVR logged to MLflow - R2: 0.8203
+[ 2026-06-05 10:57:27,792 ] 63 root - INFO - Training Random Forest...
+[ 2026-06-05 10:57:43,700 ] 94 root - INFO - Random Forest logged to MLflow - R2: 0.9687
+[ 2026-06-05 10:57:43,728 ] 63 root - INFO - Training XGBoost...
+[ 2026-06-05 10:57:57,771 ] 94 root - INFO - XGBoost logged to MLflow - R2: 0.9636
+[ 2026-06-05 10:57:57,800 ] 104 root - INFO - Best Base Model: Linear Regression (R2: 0.9747)
+[ 2026-06-05 10:57:57,806 ] 108 root - INFO - Best trained model exported successfully to artifacts.
+[ 2026-06-05 10:57:57,809 ] 28 root - INFO - Splitting data for Hyperparameter Tuning
+[ 2026-06-05 10:57:57,818 ] 40 root - INFO - Initializing GridSearchCV for Ridge Regression
+[ 2026-06-05 10:57:57,953 ] 58 root - INFO - Executing Hyperparameter Tuning. This may take a moment...
+[ 2026-06-05 10:58:17,739 ] 64 root - INFO - Best Parameters found: {'alpha': 1.0, 'solver': 'sparse_cg'}
+[ 2026-06-05 10:58:28,683 ] 82 root - INFO - Tuned Ridge Model logged to MLflow - R2: 0.9746
+[ 2026-06-05 10:58:28,690 ] 89 root - INFO - Tuned model exported successfully to artifacts/tuned_model.pkl

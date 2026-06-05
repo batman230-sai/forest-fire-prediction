@@ -21,18 +21,36 @@ stages:
     deps:
     - path: src/components/Data_Ingestion.py
       hash: md5
-      md5: 734292863ea264cd8ab7440dd8689648
-      size: 2287
+      md5: 62e52e517d82de6497228aeca2a91e04
+      size: 2684
     - path: src/components/Data_Transformation.py
       hash: md5
       md5: b964bf89838f881a8265b44abb7ea0bc
       size: 3573
+    - path: src/components/Model_Optimization.py
+      hash: md5
+      md5: 23bcabe7ac08a386d59bc731a148bf82
+      size: 3557
     - path: src/components/Model_Trainer.py
       hash: md5
       md5: 71fbe7e1954f54760dbf38fa301d4f88
       size: 4590
     params:
       params.yaml:
+        model_optimization.Ridge.alpha:
+        - 0.01
+        - 0.1
+        - 1.0
+        - 10.0
+        - 100.0
+        model_optimization.Ridge.solver:
+        - auto
+        - svd
+        - cholesky
+        - lsqr
+        - sparse_cg
+        - sag
+        - saga
         model_trainer.Lasso_Regression.alpha: 0.1
         model_trainer.Random_Forest.max_depth: 10
         model_trainer.Random_Forest.min_samples_split: 2
@@ -61,3 +79,7 @@ stages:
       hash: md5
       md5: b8378b3e034786f5e47a3513f91ec89f
       size: 5922
+    - path: artifacts/tuned_model.pkl
+      hash: md5
+      md5: fc06094daa11af14fc8fad6cc3c7881e
+      size: 624
