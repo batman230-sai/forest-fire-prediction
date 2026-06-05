@@ -33,8 +33,8 @@ stages:
       size: 3557
     - path: src/components/Model_Trainer.py
       hash: md5
-      md5: 71fbe7e1954f54760dbf38fa301d4f88
-      size: 4590
+      md5: 9c6ecbc1eb58e4ebbe0e88269f1a6f75
+      size: 4738
     params:
       params.yaml:
         model_optimization.Ridge.alpha:

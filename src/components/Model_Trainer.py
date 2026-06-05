@@ -53,9 +53,13 @@ class ModelTrainer:
 
             model_report = {}
 
-            # --- MLFLOW SETUP ---
-            # Set the tracking URI to your local sqlite database
-            mlflow.set_tracking_uri("sqlite:///mlflow.db")
+            # Remove this:
+# mlflow.set_tracking_uri("sqlite:///mlflow.db")
+
+# Replace with your DagsHub remote URI:
+
+            os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/batman230-sai/forest-fire-prediction.mlflow"
+            mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
             # Name your experiment
             mlflow.set_experiment("Forest_Fire_Regression_Experiments")
 
