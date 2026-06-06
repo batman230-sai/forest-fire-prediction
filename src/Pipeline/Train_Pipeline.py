@@ -31,17 +31,15 @@ class TrainPipeline:
             # Step 3: Model Training
             logging.info("--- Step 3: Initiating Model Training ---")
             trainer = ModelTrainer()
-            # This should train the model, evaluate it, and save tuned_model.pkl
             r2_score = trainer.initiate_model_trainer(train_arr, test_arr)
             
             logging.info(f"Training Pipeline Completed Successfully. Final Model R2 Score: {r2_score}")
-            print(f"✅ Pipeline complete! Model trained with R2 Score: {r2_score}")
+            print(f"Pipeline complete! Model trained with R2 Score: {r2_score}")
 
         except Exception as e:
             logging.error("Exception occurred in the Training Pipeline")
             raise CustomException(e, sys)
 
-# This allows you to run the training pipeline directly from the terminal
 if __name__ == "__main__":
     try:
         pipeline = TrainPipeline()
