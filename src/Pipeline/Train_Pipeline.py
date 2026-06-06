@@ -2,7 +2,6 @@ import sys
 from src.logger import logging
 from src.exception import CustomException
 
-# Import the components you already built
 from src.components.Data_Ingestion import DataIngestion
 from src.components.Data_Transformation import DataTransformation
 from src.components.Model_Trainer import ModelTrainer
