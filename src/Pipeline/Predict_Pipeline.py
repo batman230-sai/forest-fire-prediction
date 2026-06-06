@@ -6,25 +6,29 @@ from src.utils import load_object
 
 class PredictPipeline:
     def __init__(self):
-        pass
+        # Optimization: Load artifacts once during initialization to reduce prediction latency
+        try:
+            model_path = os.path.join("artifacts", "tuned_model.pkl")
+            preprocessor_path = os.path.join("artifacts", "preprocessor.pkl")
+            
+            print("Loading artifacts...")
+            self.model = load_object(file_path=model_path)
+            self.preprocessor = load_object(file_path=preprocessor_path)
+            print("Artifacts loaded successfully.")
+        except Exception as e:
+            raise CustomException(e, sys)
 
     def predict(self, features):
         try:
-            model_path = os.path.join("artifacts", "model.pkl")
-            preprocessor_path = os.path.join("artifacts", "preprocessor.pkl")
-            
-            print("Before Loading")
-            model = load_object(file_path=model_path)
-            preprocessor = load_object(file_path=preprocessor_path)
-            print("After Loading")
-            
-            data_scaled = preprocessor.transform(features)
-            preds = model.predict(data_scaled)
+            # Artifacts are already in memory, simply transform and predict
+            data_scaled = self.preprocessor.transform(features)
+            preds = self.model.predict(data_scaled)
             
             return preds
         
         except Exception as e:
             raise CustomException(e, sys)
+
 
 class CustomData:
     def __init__(self,
@@ -54,7 +58,10 @@ class CustomData:
         try:
             # Map the incoming string to the integer the preprocessor expects
             class_mapping = {'fire': 1, 'not fire': 0}
-            mapped_class = class_mapping.get(self.Classes.strip().lower(), 0) # Defaults to 0 if unexpected string
+            
+            # Safe conversion: ensures it won't crash if an int/float is passed by mistake
+            class_val = str(self.Classes).strip().lower()
+            mapped_class = class_mapping.get(class_val, 0) # Defaults to 0 if unexpected string
 
             custom_data_dict = {
                 "Temperature": [self.Temperature],
