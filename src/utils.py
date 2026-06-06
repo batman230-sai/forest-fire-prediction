@@ -24,3 +24,10 @@ def save_object(file_path, obj):
 
     except Exception as e:
         raise CustomException(e, sys)
+def load_object(file_path):
+    """Loads a python object (like a model or scaler) from a specified file path."""
+    try:
+        with open(file_path, "rb") as file_obj:
+            return joblib.load(file_obj)
+    except Exception as e:
+        raise CustomException(e, sys)

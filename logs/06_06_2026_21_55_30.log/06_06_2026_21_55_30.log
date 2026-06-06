@@ -1,0 +1,9 @@
+[ 2026-06-06 21:55:42,717 ] 24 root - INFO - Starting Data Ingestion Method
+[ 2026-06-06 21:55:42,794 ] 28 root - INFO - Read the dataset successfully
+[ 2026-06-06 21:55:42,808 ] 33 root - INFO - Initiating Train-Test Split
+[ 2026-06-06 21:55:42,844 ] 39 root - INFO - Data Ingestion completed successfully
+[ 2026-06-06 21:55:42,918 ] 56 root - INFO - Applying custom pandas cleaning logic
+[ 2026-06-06 21:55:43,022 ] 60 root - INFO - Obtaining preprocessing object
+[ 2026-06-06 21:55:43,028 ] 70 root - INFO - Applying StandardScaler to numerical features
+[ 2026-06-06 21:55:43,112 ] 33 root - INFO - Splitting transformed data into X and y
+[ 2026-06-06 21:55:49,298 ] 67 root - INFO - Training Linear Regression...
