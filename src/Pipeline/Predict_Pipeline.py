@@ -6,7 +6,7 @@ from src.utils import load_object
 
 class PredictPipeline:
     def __init__(self):
-        # Optimization: Load artifacts once during initialization to reduce prediction latency
+        # Load pikle files 
         try:
             model_path = os.path.join("artifacts", "tuned_model.pkl")
             preprocessor_path = os.path.join("artifacts", "preprocessor.pkl")
@@ -20,7 +20,6 @@ class PredictPipeline:
 
     def predict(self, features):
         try:
-            # Artifacts are already in memory, simply transform and predict
             data_scaled = self.preprocessor.transform(features)
             preds = self.model.predict(data_scaled)
             
@@ -56,12 +55,12 @@ class CustomData:
 
     def get_data_as_df(self):
         try:
-            # Map the incoming string to the integer the preprocessor expects
+            # encoding
             class_mapping = {'fire': 1, 'not fire': 0}
             
-            # Safe conversion: ensures it won't crash if an int/float is passed by mistake
+            # Safe conversion
             class_val = str(self.Classes).strip().lower()
-            mapped_class = class_mapping.get(class_val, 0) # Defaults to 0 if unexpected string
+            mapped_class = class_mapping.get(class_val, 0) 
 
             custom_data_dict = {
                 "Temperature": [self.Temperature],
