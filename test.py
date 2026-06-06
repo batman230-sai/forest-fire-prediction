@@ -35,10 +35,10 @@ def test_pipeline():
         print("\nRunning prediction...")
         prediction = pipeline.predict(input_df)
         
-        print(f"\n✅ Success! The predicted FWI value is: {prediction[0]:.4f}")
+        print(f"\n Success! The predicted FWI value is: {prediction[0]:.4f}")
         
     except Exception as e:
-        print(f"\n❌ Pipeline failed with error: {e}")
+        print(f"\n Pipeline failed with error: {e}")
 
 if __name__ == "__main__":
     test_pipeline()
