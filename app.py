@@ -1,12 +1,10 @@
 from fastapi import FastAPI
 from pydantic import BaseModel,Field,field_validator, ValidationInfo
 from typing import Any
-import pickle
-
-with open('artifacts/preprocessor.pkl', 'rb') as file:
-    scaler = pickle.load(file)
-with open('artifacts/tuned_model.pkl', 'rb') as file:
-    model = pickle.load(file)
+import pandas as pd
+import joblib
+scaler = joblib.load('artifacts/preprocessor.pkl')
+model=joblib.load('artifacts/tuned_model.pkl')
 
 DATASET_MEANS = {
     "Temperature": 33,
@@ -52,26 +50,38 @@ class ModelFeatures(BaseModel):
     @field_validator('Classes', mode='before')
     @classmethod
     def convert_and_impute_classes(cls, value: Any) -> int:
-        # Handle Imputation with Mode if they left it blank
         if value in [None, ""]:
             print(f"Classes field empty. Imputing with mode: {DATASET_MODE_CLASS}")
             return DATASET_MODE_CLASS
+        
         if isinstance(value, str):
             clean_value = value.strip().lower()
-            if "not" in clean_value:
+            if clean_value in ["not fire", "notfire", "not_fire", "0"]:  # ✅ explicit
                 return 0
-            elif "fire" in clean_value:
+            elif clean_value in ["fire", "1"]:                           # ✅ explicit
                 return 1
             else:
-                raise ValueError("Classes dropdown value must be 'fire' or 'notfire'.")
-                
-        return value
+                raise ValueError("Classes must be 'fire' or 'not fire'.")
+        
+        if isinstance(value, int) and value in [0, 1]:
+            return value
+        
+        raise ValueError("Classes must be 0 or 1.")
 # GET Request: About Section
 @app.get("/about")
 def about_me():
     """
     Displays professional information and interactive links.
     """
+    return {
+        "developer": "Durgavajula Sai Kumar",
+        "role": "Data Science & Machine Learning | Incoming GET at LTI Mindtree",
+        "project": "Forest Fire Prediction System",
+        "connect": {
+            "github": "https://github.com/batman230-sai",
+            "linkedin": "https://www.linkedin.com/in/sai-kumar-474689289"
+        }
+    }
 
 # POST Request: Prediction Endpoint
 @app.post("/predict")
@@ -79,8 +89,8 @@ def predict(data: ModelFeatures):
     """
     Collects input data, runs the ML model, and sends back the prediction.
     """
-    raw_data = [list(data.model_dump().values())] 
-
+    raw_data = pd.DataFrame([data.model_dump()])
+    print(f"Classes received: {data.Classes}")
     scaled_data = scaler.transform(raw_data)
     
     prediction = model.predict(scaled_data)
