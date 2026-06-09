@@ -8,13 +8,6 @@ class ModelFeatures(BaseModel):
     """
     Reads input data and validates it automatically.
     """
-
-# GET Request: About Section
-@app.get("/about")
-def about_me():
-    """
-    Displays professional information and interactive links.
-    """
     Temperature: int=Field(ge=-10,le=60,description="Temperature in Celsius")
     RH: int=Field(ge=10,le=100,description="Relative Humidity in %")
     Ws: int=Field(ge=0,le=100,description="Wind Speed in km/h")
@@ -25,6 +18,13 @@ def about_me():
     ISI: float=Field(ge=0.0,description="Initial Spread Index")
     BUI: float=Field(ge=0.0,description="Build Up Index")
     Classes: int=Field(ge=0,le=1)
+
+# GET Request: About Section
+@app.get("/about")
+def about_me():
+    """
+    Displays professional information and interactive links.
+    """
 
 # POST Request: Prediction Endpoint
 @app.post("/predict")
