@@ -15,9 +15,18 @@ def about_me():
     """
     Displays professional information and interactive links.
     """
+    Temperature: int
+    RH: int
+    Ws: int
+    Rain: int
+    FFMC: float
+    DMC: float
+    DC: float
+    ISI: float
+    BUI: float
+    Classes: int
 
 # POST Request: Prediction Endpoint
-# ---------------------------------------------------------
 @app.post("/predict")
 def predict(data: ModelFeatures):
     """
