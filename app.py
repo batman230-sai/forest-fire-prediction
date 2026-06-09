@@ -1,5 +1,18 @@
 from fastapi import FastAPI
-from pydantic import BaseModel,Field,field_validator
+from pydantic import BaseModel,Field,field_validator, StrictInt, StrictFloat
+
+DATASET_MEANS = {
+    "Temperature": 32,
+    "RH": 62,
+    "Ws": 16,
+    "Rain": 1.0,
+    "FFMC": 78.0,
+    "DMC": 15.0,
+    "DC": 50.0,
+    "ISI": 5.0,
+    "BUI": 17.0
+}
+DATASET_MODE_CLASS = 1
 
 # Initialize the app
 app = FastAPI(title="Forest Fire Prediction API")
@@ -9,15 +22,15 @@ class ModelFeatures(BaseModel):
     Reads input data and validates it automatically.
     """
     Temperature: int=Field(ge=-10,le=60,description="Temperature in Celsius")
-    RH: int=Field(ge=10,le=100,description="Relative Humidity in %")
-    Ws: int=Field(ge=0,le=100,description="Wind Speed in km/h")
-    Rain: int=Field(ge=0,description="Rainfall in mm")
-    FFMC: float=Field(ge=0.0,le=100.0,description="Fine Fuel Moisture Code")
-    DMC: float=Field(ge=0.0,description="Duff Moisture Code")
-    DC: float=Field(ge=0.0,description="Drought Code")
-    ISI: float=Field(ge=0.0,description="Initial Spread Index")
-    BUI: float=Field(ge=0.0,description="Build Up Index")
-    Classes: int=Field(ge=0,le=1)
+    RH: StrictInt=Field(ge=10,le=100,description="Relative Humidity in %")
+    Ws: StrictInt=Field(ge=0,le=100,description="Wind Speed in km/h")
+    Rain: StrictFloat=Field(ge=0,description="Rainfall in mm")
+    FFMC: StrictFloat=Field(ge=0.0,le=100.0,description="Fine Fuel Moisture Code")
+    DMC: StrictFloat=Field(ge=0.0,description="Duff Moisture Code")
+    DC: StrictFloat=Field(ge=0.0,description="Drought Code")
+    ISI: StrictFloat=Field(ge=0.0,description="Initial Spread Index")
+    BUI: StrictFloat=Field(ge=0.0,description="Build Up Index")
+    Classes: StrictInt=Field(ge=0,le=1)
 
     @field_validator('Temperature')
     @classmethod
