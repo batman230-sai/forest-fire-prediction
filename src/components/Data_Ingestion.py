@@ -57,7 +57,6 @@ if __name__ == "__main__":
     best_score = model_trainer.initiate_model_trainer(train_arr, test_arr)
     print(f"Base Model Pipeline Completed! Best R2 Score: {best_score:.4f}")
 
-    # Triggering the Hyperparameter Tuning phase
     model_optimizer = ModelOptimizer()
     tuned_score, best_params = model_optimizer.initiate_model_optimization(train_arr, test_arr)
     print(f"Model Optimization Completed! Tuned R2 Score: {tuned_score:.4f}")
