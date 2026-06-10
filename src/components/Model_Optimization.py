@@ -16,7 +16,7 @@ from src.utils import save_object, read_params
 
 @dataclass
 class ModelOptimizationConfig:
-    # Saving the optimized model as a separate pickle file
+    
     tuned_model_file_path = os.path.join('artifacts', 'tuned_model.pkl')
 
 class ModelOptimizer:
@@ -33,14 +33,14 @@ class ModelOptimizer:
                 test_array[:, -1]
             )
 
-            # Load the tuning grid from params.yaml
+            
             params = read_params()
             ridge_param_grid = params.get("model_optimization", {}).get("Ridge", {})
 
             logging.info("Initializing GridSearchCV for Ridge Regression")
             ridge = Ridge()
             
-            # GridSearchCV will test all combinations of parameters
+            
             grid_search = GridSearchCV(
                 estimator=ridge, 
                 param_grid=ridge_param_grid, 
@@ -50,7 +50,7 @@ class ModelOptimizer:
                 verbose=2
             )
 
-            # --- MLFLOW SETUP ---
+            
             import os
             os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/batman230-sai/forest-fire-prediction.mlflow"
             mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
@@ -60,18 +60,18 @@ class ModelOptimizer:
                 logging.info("Executing Hyperparameter Tuning. This may take a moment...")
                 grid_search.fit(X_train, y_train)
 
-                # Extract the best model from the grid search
+                
                 best_model = grid_search.best_estimator_
                 best_params = grid_search.best_params_
                 logging.info(f"Best Parameters found: {best_params}")
 
-                # Evaluate the tuned model
+                
                 y_pred = best_model.predict(X_test)
                 r2 = r2_score(y_test, y_pred)
                 mae = mean_absolute_error(y_test, y_pred)
                 rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 
-                # Log the best parameters and final metrics to MLflow
+                
                 mlflow.log_params(best_params)
                 mlflow.log_metrics({
                     "Tuned_MAE": mae,
@@ -79,11 +79,11 @@ class ModelOptimizer:
                     "Tuned_R2_Score": r2
                 })
                 
-                # Log the final model artifact
+                
                 mlflow.sklearn.log_model(best_model, "tuned_model")
                 logging.info(f"Tuned Ridge Model logged to MLflow - R2: {r2:.4f}")
 
-                # Save the winning tuned model locally as a pickle file
+                
                 save_object(
                     file_path=self.optimizer_config.tuned_model_file_path, 
                     obj=best_model
