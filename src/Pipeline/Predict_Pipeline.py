@@ -6,7 +6,7 @@ from src.utils import load_object
 
 class PredictPipeline:
     def __init__(self):
-        # Load pikle files 
+         
         try:
             model_path = os.path.join("artifacts", "tuned_model.pkl")
             preprocessor_path = os.path.join("artifacts", "preprocessor.pkl")
@@ -55,10 +55,10 @@ class CustomData:
 
     def get_data_as_df(self):
         try:
-            # encoding
+            
             class_mapping = {'fire': 1, 'not fire': 0}
             
-            # Safe conversion
+            
             class_val = str(self.Classes).strip().lower()
             mapped_class = class_mapping.get(class_val, 0) 
 
