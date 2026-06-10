@@ -41,7 +41,7 @@ class ModelTrainer:
             params = read_params()
             model_params = params["model_trainer"]
 
-            # Initialize all 6 models dynamically
+            
             models = {
                 "Linear Regression": LinearRegression(**model_params.get("Linear_Regression", {})),
                 "Ridge Regression": Ridge(**model_params.get("Ridge_Regression", {})),
@@ -69,18 +69,17 @@ class ModelTrainer:
                 # Start an MLflow run for each model
                 with mlflow.start_run(run_name=name):
                     
-                    # 1. Train the model
+                    
                     model.fit(X_train, y_train)
                     y_pred = model.predict(X_test)
                     
-                    # 2. Calculate Evaluation Metrics
+                    
                     mae = mean_absolute_error(y_test, y_pred)
                     mse = mean_squared_error(y_test, y_pred)
                     rmse = np.sqrt(mse)
                     r2 = r2_score(y_test, y_pred)
                     
-                    # 3. Log Parameters and Metrics to MLflow
-                    # Fetch the specific parameters for this model from the yaml dict
+                    
                     current_model_params = model_params.get(name.replace(" ", "_"), {})
                     if current_model_params:
                         mlflow.log_params(current_model_params)
@@ -92,22 +91,22 @@ class ModelTrainer:
                         "R2_Score": r2
                     })
                     
-                    # 4. Log the model artifact to MLflow
+                    
                     mlflow.sklearn.log_model(model, "model")
                     
                     logging.info(f"{name} logged to MLflow - R2: {r2:.4f}")
                     
-                    # Store R2 score to determine the overall best model to save locally
+                    
                     model_report[name] = r2
             
-            # Identify the best performing model based on R2 score
+            
             best_model_name = max(model_report, key=model_report.get)
             best_model_score = model_report[best_model_name]
             best_model = models[best_model_name]
 
             logging.info(f"Best Base Model: {best_model_name} (R2: {best_model_score:.4f})")
 
-            # Save the winning model locally for your pipeline
+            
             save_object(file_path=self.model_trainer_config.trained_model_file_path, obj=best_model)
             logging.info("Best trained model exported successfully to artifacts.")
 
