@@ -1,6 +1,6 @@
 # forest_fire_ui
 
-A new Flutter project.
+A new Flutter project. This is a App based on Algerian forest fire prediction using machine Learning.
 
 ## Getting Started
 
