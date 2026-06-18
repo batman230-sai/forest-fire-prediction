@@ -12,7 +12,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // restart instead.
         //
         // This works for code too, not just values: Most code changes can be
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
